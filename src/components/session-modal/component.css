@@ -1,0 +1,96 @@
+/* Base styling for modal content */
+#modal-session .modal-content {
+  background-color: #2f3640 !important;
+  border: 1px solid #555 !important;
+  border-radius: 0.5rem !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6) !important;
+  padding: 1rem !important;
+  color: #d3d7db !important;
+  overflow: hidden !important;
+}
+
+/* Modal header and footer consistency */
+#modal-session .modal-header,
+#modal-session .modal-footer {
+  background-color: #242a30 !important;
+  border-color: #3a3f44 !important;
+  border-radius: 0 !important;
+}
+
+/* Remove icon and background box from modal header */
+#modal-session .modal-header {
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+}
+
+#modal-session .modal-title i {
+  display: none !important;
+}
+
+#modal-session .modal-title {
+  background-color: transparent !important;
+  color: #d3d7db !important;
+  font-weight: 500 !important;
+  font-size: 12pt !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Modal body content */
+#modal-session .modal-body {
+  background-color: transparent !important;
+  color: #d3d7db !important;
+  padding: 1.5rem !important;
+  text-align: center !important;
+}
+
+/* Alert in body */
+#modal-session .modal-body .alert {
+  background-color: transparent !important;
+  color: #d3d7db !important;
+  border: none !important;
+  padding: 0 !important;
+  font-weight: 500 !important;
+  font-size: 12pt !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* Footer button styling */
+#modal-session .modal-footer {
+  justify-content: center !important;
+  background: transparent !important;
+  border-top: none !important;
+  padding: 1rem !important;
+}
+
+#modal-session .modal-footer .btn {
+  min-width: 120px !important;
+  padding: 0.5rem 1.25rem !important;
+}
+
+/* Ensure outline-warning button fits dark mode */
+#modal-session .btn-outline-warning {
+  color: #ffffff !important;
+  background-color: #007bff !important;
+  border-color: #007bff !important;
+}
+
+#modal-session .btn-outline-warning:hover {
+  background-color: #0056b3 !important;
+  border-color: #0056b3 !important;
+}
+
+#modal-session .modal-body p {
+  font-weight: 500 !important;
+  font-size: 12pt !important;
+  color: #d3d7db !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}

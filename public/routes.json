@@ -1,0 +1,56 @@
+{
+  "/": {
+    "component": "main-viewport",
+    "child": {
+      "component": "login"
+    }
+  },
+  "/login": {
+    "component": "main-viewport",
+    "child": {
+      "component": "login"
+    }
+  },
+  "/login/admin": {
+    "component": "main-viewport",
+    "child": {
+      "component": "admin-login"
+    }
+  },
+  "/mfa-setup": {
+    "component": "main-viewport",
+    "child": {
+      "component": "mfa-setup"
+    }
+  },
+  "/update-password": {
+    "component": "main-viewport",
+    "child": {
+      "component": "update-password"
+    }
+  },
+  "/reset-password-confirm": {
+    "component": "main-viewport",
+    "child": {
+      "component": "reset-password-confirm"
+    }
+  },
+  "/post-password-change": {
+    "component": "main-viewport",
+    "child": {
+      "component": "post-password-change"
+    }
+  },
+  "/mfa": {
+    "component": "viewport",
+    "child": {
+      "component": "mfa"
+    }
+  },
+  "/forgot-password": {
+    "component": "viewport",
+    "child": {
+      "component": "forgot-password"
+    }
+  }
+}

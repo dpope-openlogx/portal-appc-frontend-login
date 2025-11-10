@@ -1,0 +1,16 @@
+{
+  "webcredentials": {
+    "apps": [
+      "K78R5H7J39.com.openlogx.NeutraNarcME"
+    ]
+  },
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "K78R5H7J39.com.openlogx.NeutraNarcME",
+        "paths": ["*"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,26 @@
+  <div class="login-content">
+    <h5 class="mb-4 text-white">Reset Password Confirmation</h5>
+    <form id="reset-password-form">
+      <div class="form-floating mb-20px">
+        <input type="text" class="form-control" id="email" name="email" placeholder="Email" required />
+        <label for="email">Email</label>
+      </div>
+      <div class="form-floating mb-20px">
+        <input type="text" class="form-control" id="code" name="code" placeholder="Verification Code" required />
+        <label for="code">Code</label>
+      </div>
+      <div class="form-floating mb-20px">
+        <input type="password" class="form-control" id="newPassword" name="newPassword" autocomplete="new-password" placeholder="New Password" required />
+        <label for="newPassword">New Password</label>
+      </div>
+      <div class="mb-20px">
+        <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg">Reset Password</button>
+      </div>
+      <ul id="password-rules" class="text-start small">
+        <li data-rule="length" class="text-danger">At least 12 characters</li>
+        <li data-rule="uppercase" class="text-danger">At least one uppercase letter</li>
+        <li data-rule="number" class="text-danger">At least one number</li>
+        <li data-rule="special" class="text-danger">At least one special character</li>
+      </ul>
+    </form>
+  </div>

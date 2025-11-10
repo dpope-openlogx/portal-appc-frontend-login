@@ -1,0 +1,66 @@
+
+    <!-- BEGIN login-content -->
+    <div class="login-content text-center">
+      <h5 class="mb-4 text-white">Scan this QR Code in your Authenticator app</h5>
+
+      <!-- QR Code Area -->
+      <div id="qrcode" class="d-flex justify-content-center mb-4"></div>
+
+      <!-- 6-digit Input -->
+      <form id="mfa-form">
+        <div class="d-flex justify-content-center gap-2 mb-3">
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+          <input type="text"
+                 maxlength="1"
+                 pattern="[0-9]*"
+                 inputmode="numeric"
+                 data-parsley-type="digits"
+                 data-parsley-length="[1,1]"
+                 class="form-control text-center fs-20px code-digit" />
+        </div>
+        <button type="submit" class="btn btn-theme w-100 h-45px btn-lg" id="mfa-setup-verify-btn">
+          <span class="mfa-setup-btn-text">Verify</span>
+          <span class="mfa-setup-btn-spinner d-none">
+            <i class="fa fa-spinner fa-spin fa-fw me-1 text-white" style="color: white !important;"></i>
+            Verifying...
+          </span>
+        </button>
+        <div id="mfa-error-message" class="text-danger d-none mt-2"></div>
+      </form>
+    </div>
+    <!-- END login-content -->
+  </div>

@@ -1,0 +1,45 @@
+<div class="login-content">
+  <h5 class="mb-4 text-white">Update Password</h5>
+  <form id="update-password-form">
+    <div class="form-floating mb-20px">
+      <input type="password" class="form-control fs-13px h-45px border-0" id="currentPassword" name="currentPassword" placeholder="Current Password" />
+      <label for="currentPassword" class="d-flex align-items-center text-gray-600 fs-13px">Current Password</label>
+    </div>
+    <div class="form-floating mb-20px">
+      <input
+        type="password"
+        class="form-control fs-13px h-45px border-0"
+        id="newPassword"
+        name="newPassword"
+        placeholder="New Password"
+      />
+      <label for="newPassword" class="d-flex align-items-center text-gray-600 fs-13px">New Password</label>
+    </div>
+    <div class="form-floating mb-20px">
+      <input
+        type="password"
+        class="form-control fs-13px h-45px border-0"
+        id="confirmPassword"
+        name="confirmPassword"
+        placeholder="Confirm Password"
+      />
+      <label for="confirmPassword" class="d-flex align-items-center text-gray-600 fs-13px">Confirm Password</label>
+    </div>
+    <div id="form-error-message" class="text-danger fs-12px mb-3" style="display: none;"></div>
+    <div class="mb-20px">
+      <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" id="update-password-btn">
+        <span class="update-password-btn-text">Update Password</span>
+        <span class="update-password-btn-spinner d-none">
+          <i class="fa fa-spinner fa-spin fa-fw me-1 text-white" style="color: white !important;"></i>
+          Updating...
+        </span>
+      </button>
+    </div>
+    <ul id="password-rules" class="text-gray-600 fs-12px mb-10px list-unstyled">
+      <li data-rule="length" class="text-danger">• At least 12 characters</li>
+      <li data-rule="uppercase" class="text-danger">• At least one uppercase letter</li>
+      <li data-rule="number" class="text-danger">• At least one number</li>
+      <li data-rule="special" class="text-danger">• At least one special character (!@#$%^&*)</li>
+    </ul>
+  </form>
+</div>

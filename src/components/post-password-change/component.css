@@ -1,0 +1,91 @@
+/* Success icon animation */
+.fa-check-circle {
+  animation: successPulse 0.6s ease-in-out;
+}
+
+@keyframes successPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Auth choice section */
+.auth-choice-section {
+  margin-top: 20px;
+}
+
+/* Auth option buttons */
+.auth-option button {
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 16px;
+}
+
+.auth-option button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.auth-option button .fa-mobile,
+.auth-option button .fa-fingerprint {
+  color: #00acac;
+}
+
+.auth-option button .fa-chevron-right {
+  font-size: 14px;
+}
+
+/* Passkey setup section */
+#passkey-setup-section {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Button styling */
+#create-passkey-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#create-passkey-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#create-passkey-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+#back-to-choice-btn {
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+#back-to-choice-btn:hover {
+  color: #ffffff !important;
+}
+
+/* Alert messages */
+.alert {
+  font-size: 13px;
+}

@@ -1,0 +1,56 @@
+/* Disabled password field group styling */
+.password-fields-group {
+  transition: opacity 0.3s ease;
+}
+
+.password-fields-group.disabled-group {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Login Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+}
+
+.login-divider .line {
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.login-divider span {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+/* Passkey Sign-In Section */
+.passkey-signin-section {
+  margin-top: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+#passkey-signin-btn {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#passkey-signin-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+#passkey-signin-btn .fa-fingerprint {
+  font-size: 18px;
+}
+
+/* Button spinner states */
+.passkey-btn-spinner,
+.login-btn-spinner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

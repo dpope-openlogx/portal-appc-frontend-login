@@ -1,0 +1,82 @@
+<div class="login-content">
+  <div class="text-center mb-4">
+    <div class="mb-3">
+      <i class="fa fa-check-circle fa-4x text-success"></i>
+    </div>
+    <h5 class="mb-3 text-white">Password Successfully Updated!</h5>
+    <p class="text-gray-500 fs-14px mb-4">
+      Great! Now let's secure your account with a second factor of authentication.
+    </p>
+  </div>
+
+  <!-- MFA Choice Section -->
+  <div class="auth-choice-section mb-4">
+    <h6 class="text-white mb-3 text-center">Choose Your Authentication Method</h6>
+
+    <!-- TOTP/MFA Option -->
+    <div class="auth-option mb-3">
+      <button type="button" id="setup-mfa-btn" class="btn btn-outline-theme d-block w-100 h-60px">
+        <div class="d-flex align-items-center justify-content-between px-2">
+          <div class="d-flex align-items-center">
+            <i class="fa fa-mobile fa-2x me-3"></i>
+            <div class="text-start">
+              <div class="fw-bold">Authenticator App</div>
+              <div class="fs-12px text-gray-500">Google Authenticator, Authy, etc.</div>
+            </div>
+          </div>
+          <i class="fa fa-chevron-right text-gray-500"></i>
+        </div>
+      </button>
+    </div>
+
+    <!-- Passkey Option -->
+    <div class="auth-option">
+      <button type="button" id="setup-passkey-btn" class="btn btn-outline-theme d-block w-100 h-60px">
+        <div class="d-flex align-items-center justify-content-between px-2">
+          <div class="d-flex align-items-center">
+            <i class="fa fa-fingerprint fa-2x me-3"></i>
+            <div class="text-start">
+              <div class="fw-bold">Passkey</div>
+              <div class="fs-12px text-gray-500">Face ID, Touch ID, Windows Hello</div>
+            </div>
+          </div>
+          <i class="fa fa-chevron-right text-gray-500"></i>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Passkey Setup In-Page Section (Initially Hidden) -->
+  <div id="passkey-setup-section" class="d-none">
+    <div class="text-center mb-4">
+      <h6 class="text-white mb-3">Set Up Your Passkey</h6>
+      <p class="text-gray-500 fs-13px mb-3">
+        You'll be prompted to use your device's biometric authentication (fingerprint, face recognition, or PIN).
+      </p>
+    </div>
+
+    <div class="mb-3">
+      <button type="button" id="create-passkey-btn" class="btn btn-theme d-block w-100 h-45px btn-lg">
+        <span class="passkey-btn-text">
+          <i class="fa fa-fingerprint me-2"></i>
+          Create Passkey
+        </span>
+        <span class="passkey-btn-spinner d-none">
+          <i class="fa fa-spinner fa-spin fa-fw me-1 text-white"></i>
+          Creating...
+        </span>
+      </button>
+    </div>
+
+    <div class="text-center">
+      <button type="button" id="back-to-choice-btn" class="btn btn-link text-gray-500 fs-13px">
+        <i class="fa fa-arrow-left me-1"></i>
+        Back to choices
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading/Error Messages -->
+  <div id="error-message" class="alert alert-danger d-none mt-3" role="alert"></div>
+  <div id="success-message" class="alert alert-success d-none mt-3" role="alert"></div>
+</div>

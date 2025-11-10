@@ -1,0 +1,122 @@
+:root {
+  --bs-app-theme: #0c265f !important;
+  --bs-app-theme-rgb: 12, 38, 95 !important;
+  --bs-app-theme-color: #ffffff !important;
+  --bs-app-theme-color-rgb: 255, 255, 255 !important;
+  --bs-app-theme-hover: #091d4a !important;
+  --bs-app-theme-hover-border-color: #091d4a !important;
+}
+
+button.btn.btn-primary,
+button.btn.btn-primary:focus,
+button.btn.btn-primary:active,
+button.btn.btn-primary.active,
+button.btn.btn-primary:focus:active,
+button.btn.btn-primary:visited,
+button.btn.btn-primary:target,
+button.btn.btn-primary:focus-visible {
+  background-color: var(--bs-app-theme) !important;
+  border-color: var(--bs-app-theme) !important;
+  color: var(--bs-app-theme-color) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+button.btn.btn-primary:active,
+button.btn.btn-primary.active {
+  background-color: var(--bs-app-theme-hover) !important;
+  border-color: var(--bs-app-theme-hover-border-color) !important;
+  color: var(--bs-app-theme-color) !important;
+  box-shadow: none !important;
+}
+
+button.btn.btn-theme,
+button.btn.btn-theme:focus,
+button.btn.btn-theme:active,
+button.btn.btn-theme.active,
+button.btn.btn-theme:focus:active,
+button.btn.btn-theme:visited,
+button.btn.btn-theme:target,
+button.btn.btn-theme:focus-visible {
+  background-color: var(--bs-app-theme) !important;
+  border-color: var(--bs-app-theme) !important;
+  color: var(--bs-app-theme-color) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+button.btn.btn-theme:active,
+button.btn.btn-theme.active {
+  background-color: var(--bs-app-theme-hover) !important;
+  border-color: var(--bs-app-theme-hover-border-color) !important;
+  color: var(--bs-app-theme-color) !important;
+  box-shadow: none !important;
+}
+
+.login.login-v2 .login-header .brand .logo {
+  display: inline-block;
+  width: 149px;
+  height: 52px;
+  background-image: url('/assets/img/logo_only.svg') !important;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: none !important;
+  background-color: transparent !important;
+  font-size: 0;
+}
+
+/* Style the brand title with dark blue color */
+.login .login-header .brand {
+  color: #0c265f !important;
+}
+
+/* Override Parsley.js error styling to match Bootstrap's alert-danger */
+.login .form-floating .form-control {
+  background-color: #fff !important;
+}
+
+.gritter-error {
+  background-color: #331211 !important;   /* Bootstrap bg-subtle */
+  color: #ff9d9a !important;              /* Bootstrap text-emphasis */
+  border-left: 5px solid #f5c2c7;         /* Bootstrap border-subtle */
+  font-weight: 500;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.gritter-success {
+  background-color: #102b18 !important;    /* Dark green background */
+  color: #9ae6b4 !important;               /* Bootstrap-like success text (#198754 alt) */
+  border-left: 5px solid #7dd3a9;          /* Subtle green border */
+  font-weight: 500;
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.gritter-title-success {
+  color: #75b798 !important; /* Bootstrap success-emphasis */
+  font-weight: bold;
+}
+.gritter-title-info {
+  color: #6ea8fe !important; /* Bootstrap info-emphasis */
+  font-weight: bold;
+}
+.gritter-title-warning {
+  color: #ffda6a !important; /* Bootstrap warning-emphasis */
+  font-weight: bold;
+}
+.gritter-title-error {
+  color: #ff9d9a !important; /* Bootstrap danger-emphasis */
+  font-weight: bold;
+}
+
+.login .form-control.parsley-success {
+  border-color: #28a745 !important;
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25) !important;
+}
+
+.login .form-control.parsley-error {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}

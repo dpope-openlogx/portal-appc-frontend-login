@@ -1,0 +1,36 @@
+<!-- Master layout: wraps background + content slot -->
+<div class="login login-with-news-feed fw-bold">
+  <!-- BEGIN news-feed -->
+  <div class="news-feed">
+    <div class="news-image" style="background-image: url('/assets/img/login-bg/appc_splash2.jpg')" data-id="login-cover-image"></div>
+    <div class="news-caption">
+      <div class="logo-backdrop">
+        <img src="/assets/img/login-bg/APPC Logo Transparent Background.png" alt="Allegheny Petroleum Products" />
+      </div>
+      <p>
+        Portal Access System - Secure gateway to your data and insights.<br>
+        Integrated Fluid Management
+      </p>
+    </div>
+  </div>
+  <!-- END news-feed -->
+
+  <!-- Required container for login content -->
+  <div class="login-container">
+    <!-- BEGIN login-header -->
+    <div class="login-header mb-30px">
+      <div class="brand">
+        <div class="d-flex align-items-center">
+          <img src="/assets/img/FullLogo_RedGear_LogoOnly.png" alt="Logo" style="height: 40px; width: auto; margin-right: 10px;" />
+          <b>Oils.Exchange Login</b>
+        </div>
+        <small class="text-dark">Please provide your credentials.</small>
+      </div>
+      <div class="icon"><i class="fa fa-lock"></i></div>
+    </div>
+    <!-- END login-header -->
+    <div class="login-content">
+      <div id="main-slot" data-component="login"></div>
+    </div>
+  </div>
+</div>

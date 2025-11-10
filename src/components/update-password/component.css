@@ -1,0 +1,91 @@
+/* Fix form input visibility */
+.form-control {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6 !important;
+  color: #495057 !important;
+}
+
+.form-control:focus {
+  border-color: #0077cc !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 119, 204, 0.25) !important;
+  background-color: #ffffff !important;
+}
+
+/* Ensure form floating labels work */
+.form-floating > label {
+  color: #6c757d !important;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+  color: #0077cc !important;
+}
+
+/* Password rules styling */
+#password-rules li.text-success {
+  color: #28a745 !important;
+}
+
+#password-rules li.text-danger {
+  color: #dc3545 !important;
+}
+
+/* Fix Parsley error positioning and spacing */
+.form-floating {
+  position: relative;
+}
+
+/* Add bottom margin to form fields to make space for errors */
+.form-floating.mb-20px {
+  margin-bottom: 35px !important;
+}
+
+/* Hide Parsley error messages - we use custom validation feedback */
+.parsley-errors-list {
+  display: none !important;
+}
+
+.parsley-error {
+  display: none !important;
+}
+
+/* Hide Parsley error styling on inputs */
+.form-control.parsley-error {
+  border-color: #dee2e6 !important;
+  box-shadow: none !important;
+}
+
+/* Only show red border for invalid passwords with our custom logic */
+.form-control.password-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Ensure confirm password field stays visible */
+#confirmPassword {
+  background-color: #ffffff !important;
+  border: 1px solid #dee2e6 !important;
+  color: #495057 !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#confirmPassword:focus {
+  border-color: #0077cc !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 119, 204, 0.25) !important;
+}
+
+/* Custom validation error styling */
+.form-control.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+.field-error {
+  position: absolute;
+  bottom: -22px;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}

@@ -1,0 +1,73 @@
+<!-- BEGIN login-content -->
+<div class="login-content">
+  <form id="login-form" data-parsley-validate>
+    <div class="form-floating mb-20px">
+      <input
+        type="text"
+        name="email"
+        class="form-control fs-13px h-45px w-100"
+        placeholder="Email Address"
+        id="email"
+        data-parsley-required="true"
+        data-parsley-type="email"
+        data-parsley-errors-container="#email-errors"
+      />
+      <label for="email" class="d-flex align-items-center text-gray-600 fs-13px">Email Address</label>
+      <div id="email-errors" class="text-danger fs-12px mt-1"></div>
+    </div>
+
+    <!-- Password fields - will be hidden on passkey hover -->
+    <div class="password-fields-group">
+      <div class="form-floating mb-20px">
+        <input
+          type="password"
+          name="password"
+          class="form-control fs-13px h-45px w-100"
+          placeholder="Password"
+          id="password"
+          data-parsley-required="true"
+          data-parsley-errors-container="#password-errors"
+        />
+        <label for="password" class="d-flex align-items-center text-gray-600 fs-13px">Password</label>
+        <div id="password-errors" class="text-danger fs-12px mt-1"></div>
+      </div>
+
+      <div class="mb-20px">
+        <button type="submit" class="btn btn-theme d-block w-100 h-45px btn-lg" id="login-submit-btn">
+          <span class="login-btn-text">Sign In</span>
+          <span class="login-btn-spinner d-none">
+            <i class="fa fa-spinner fa-spin fa-fw me-1 text-white" style="color: white !important;"></i>
+            Signing in...
+          </span>
+        </button>
+      </div>
+      <div class="text-gray-600">
+        Forgot Your Password? Click <a href="#/forgot-password" class="text-primary" id="forgot-password-link">here</a> to get a code.
+      </div>
+    </div>
+  </form>
+
+  <!-- Passkey Sign-In Section -->
+  <div class="login-divider">
+    <div class="line"></div>
+    <span class="text-gray-600 px-2">OR</span>
+    <div class="line"></div>
+  </div>
+
+  <div class="passkey-signin-section">
+    <button type="button" class="btn btn-outline-theme d-block w-100 h-45px btn-lg" id="passkey-signin-btn">
+      <span class="passkey-btn-text">
+        <i class="fa fa-fingerprint me-2"></i>
+        Sign in with Passkey
+      </span>
+      <span class="passkey-btn-spinner d-none text-gray-600">
+        <i class="fa fa-spinner fa-spin fa-fw me-1 text-gray-600"></i>
+        Authenticating...
+      </span>
+    </button>
+    <div class="text-center text-gray-600 fs-12px mt-2">
+      Use biometrics (Face ID, Touch ID, Windows Hello)
+    </div>
+  </div>
+</div>
+<!-- END login-content -->

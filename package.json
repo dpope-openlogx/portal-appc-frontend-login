@@ -1,0 +1,25 @@
+{
+  "name": "portal-appc-frontend-login-ts",
+  "version": "1.0.0",
+  "description": "APPC Login SPA converted to TypeScript using Vite",
+  "author": "Dermot Pope",
+  "license": "ISC",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vite-plugin-static-copy": "^3.1.1"
+  },
+  "dependencies": {
+    "@aws-amplify/auth": "^6.13.3",
+    "aws-amplify": "^6.15.3"
+  }
+}
