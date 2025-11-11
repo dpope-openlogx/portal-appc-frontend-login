@@ -4,6 +4,7 @@ import { RouteMap } from './types/routes';
 import { initializeLayout, updateChildView } from './components/main-viewport/component';
 import Auth from './utils/auth';
 import { getAuthEndpoint } from './utils/config';
+import { listWebAuthnCredentials, fetchMFAPreference } from 'aws-amplify/auth';
 
 // Vite import map for components
 const componentModules = import.meta.glob('./components/**/component.{ts,js}');
@@ -146,11 +147,31 @@ window.addEventListener('DOMContentLoaded', async () => {
   // Auto-redirect if session is already valid
   const alreadyLoggedIn = await Auth.checkSession();
   if (alreadyLoggedIn) {
-    console.log('[Login SPA] Session already valid, redirecting to /secure/');
-    const authEndpoint = getAuthEndpoint();
-    console.log('[Login SPA] Session already valid, redirecting to', authEndpoint);
-    window.location.href = authEndpoint;
-    return;
+    console.log('[Login SPA] Session already valid, checking MFA setup...');
+
+    try {
+      // Check if user has MFA or passkeys configured
+      const passkeyResult = await listWebAuthnCredentials();
+      const hasPasskeys = (passkeyResult.credentials || []).length > 0;
+
+      const mfaPreference = await fetchMFAPreference();
+      const hasMFA = mfaPreference?.preferred === 'TOTP' || mfaPreference?.enabled?.includes('TOTP');
+
+      if (!hasMFA && !hasPasskeys) {
+        console.log('[Login SPA] User has valid session but no MFA setup, showing login page');
+        // Don't redirect - continue loading the login page so they can complete setup
+        // Fall through to load the login page
+      } else {
+        console.log('[Login SPA] Session valid and MFA configured, redirecting to /secure/');
+        const authEndpoint = getAuthEndpoint();
+        window.location.href = authEndpoint;
+        return;
+      }
+    } catch (error) {
+      console.warn('[Login SPA] Failed to check MFA status, showing login page:', error);
+      // On error, show login page rather than auto-redirecting
+      // Fall through to load the login page
+    }
   }
 
   // load global assets

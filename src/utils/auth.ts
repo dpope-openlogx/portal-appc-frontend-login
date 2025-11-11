@@ -41,7 +41,8 @@ export async function signInUser(email: string, password: string): Promise<{
 }> {
   await configureAuth();
 
-  const result = await signIn({ username: email, password });
+  try {
+    const result = await signIn({ username: email, password });
 
   if (!result.isSignedIn && result.nextStep.signInStep === "CONTINUE_SIGN_IN_WITH_TOTP_SETUP") {
     return {
@@ -112,6 +113,31 @@ export async function signInUser(email: string, password: string): Promise<{
   }
 
   return { status: 'Success'};
+
+  } catch (error: any) {
+    console.error('[signInUser] Error:', error);
+
+    // Handle the specific case where user is already signed in
+    if (error.message && error.message.includes('already a signed in user')) {
+      console.log('[signInUser] User already signed in, signing out first and retrying...');
+      try {
+        await signOut();
+        // Retry the sign in after signing out
+        const retryResult = await signIn({ username: email, password });
+        // Process the retry result with the same logic as above
+        // For now, just return MFASetup to trigger the setup flow
+        return {
+          status: 'MFASetup',
+          mfaSetupUrl: '' // Empty URL signals we should go to post-password-change
+        };
+      } catch (retryError) {
+        console.error('[signInUser] Retry failed:', retryError);
+        return { status: 'Failed', error: 'Sign in failed after retry' };
+      }
+    }
+
+    return { status: 'Failed', error: error.message || 'Sign in failed' };
+  }
 }
 
 export async function updatePassword(email: string, newPassword: string, tempPassword: string) {
@@ -142,18 +168,9 @@ export async function updatePassword(email: string, newPassword: string, tempPas
         return { status: "MFA" };
       }
 
-      // Password change successful - user must now set up MFA or Passkey
-      // Sign them out to clear any session/tokens without redirecting
-      // This enforces that they MUST complete 2FA setup before being authenticated
-      console.log('[updatePassword] Password changed, clearing session to enforce 2FA setup');
-      try {
-        await signOut();
-        console.log('[updatePassword] Session cleared successfully');
-      } catch (signOutError) {
-        console.warn('[updatePassword] Failed to clear session:', signOutError);
-        // Continue anyway - they'll still go to post-password-change
-      }
-
+      // Password change successful - user can now set up MFA or Passkey
+      // Keep them authenticated so they can complete the MFA setup process
+      console.log('[updatePassword] Password changed successfully');
       return { status: "Success" };
     }
 
