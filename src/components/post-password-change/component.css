@@ -1,6 +1,10 @@
-/* Success icon animation */
+/* Success icon animation and color override */
 .fa-check-circle {
   animation: successPulse 0.6s ease-in-out;
+}
+
+.fa-check-circle.text-success {
+  color: #0c265f !important;
 }
 
 @keyframes successPulse {
@@ -34,9 +38,14 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
+.auth-option button:hover .fa-mobile,
+.auth-option button:hover .fa-fingerprint {
+  color: #ffffff !important;
+}
+
 .auth-option button .fa-mobile,
 .auth-option button .fa-fingerprint {
-  color: #00acac;
+  color: #0c265f;
 }
 
 .auth-option button .fa-chevron-right {
