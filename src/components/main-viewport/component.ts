@@ -106,8 +106,20 @@ export async function updateChildView(childRoute: RouteEntry['child'] | undefine
     slot.innerHTML = html;
     console.log(`[MainViewport] Injected HTML (${childRoute.component}) into slot from ${basePath}/${childRoute.component}/component.html`);
 
-    // Parsley: Bind validation after the child component's HTML is injected
+    // Parsley: Configure email validator and bind validation after the child component's HTML is injected
     if ((window as any).jQuery && (window as any).jQuery.fn.parsley) {
+      // Override Parsley's email validator to support + character and other valid email characters
+      (window as any).Parsley.addValidator('email', {
+        validateString: function(value: string) {
+          // More comprehensive email regex that supports + and other valid characters
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          return emailRegex.test(value);
+        },
+        messages: {
+          en: 'This value should be a valid email.'
+        }
+      }, true); // true means override existing validator
+
       (window as any).jQuery('form[data-parsley-validate]').parsley();
     }
 
