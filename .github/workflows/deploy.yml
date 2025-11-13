@@ -41,7 +41,9 @@ jobs:
       run: npm ci
 
     - name: Build application
-      run: npm run build
+      run: |
+        chmod +x build-login.sh
+        ./build-login.sh
 
     - name: Create deployment package
       run: |
