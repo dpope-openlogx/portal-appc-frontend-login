@@ -23,7 +23,7 @@ export function buildServiceUrl(service: 'api' | 'auth' | 'ws'): string {
     if (currentHost.includes('local')) {
       switch (service) {
         case 'auth':
-          return '/secure/';
+          return `${import.meta.env.BASE_URL}secure/`;
         case 'api':
           return '/api/'; // Will be proxied by vite middleware
         case 'ws':
@@ -52,7 +52,7 @@ export function buildServiceUrl(service: 'api' | 'auth' | 'ws'): string {
     // Fallback for unexpected domains
     switch (service) {
       case 'auth':
-        return '/secure/';
+        return `${import.meta.env.BASE_URL}secure/`;
       case 'api':
         return '/api/';
       case 'ws':
@@ -62,7 +62,7 @@ export function buildServiceUrl(service: 'api' | 'auth' | 'ws'): string {
     }
   } catch (error) {
     console.warn(`Failed to build ${service} URL from current location, using fallback`, error);
-    return service === 'auth' ? '/secure/' : `/${service}/`;
+    return service === 'auth' ? `${import.meta.env.BASE_URL}secure/` : `${import.meta.env.BASE_URL}${service}/`;
   }
 }
 
