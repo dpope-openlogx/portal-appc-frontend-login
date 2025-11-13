@@ -18,4 +18,7 @@ find src/components -name "component.html" -o -name "component.css" | while read
   cp "$filepath" "$dest"
 done
 
+echo "🔧 Fixing CSS asset paths for production..."
+find dist/components -name "component.css" -exec sed -i '' 's|url(\x27/assets/|url(\x27../../assets/|g' {} \;
+
 echo "✅ Login SPA build complete. Output: dist/"

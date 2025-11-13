@@ -49,7 +49,7 @@
     radial-gradient(circle at top right, #ffffff 0%, rgba(255,255,255,0.95) 40%, rgba(255,255,255,0.7) 70%, transparent 85%),
     linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.15) 15%, rgba(0,0,0,0.08) 30%, rgba(0,0,0,0.03) 50%, rgba(0,0,0,0.01) 70%, rgba(0,0,0,0) 80%),
     linear-gradient(to bottom, #ffffff 0%, #ffffff 75%, rgba(0,0,0,0.2) 97%, rgba(0,0,0,0.8) 99%, #000000 99.5%, #000000 100%),
-    url('../../assets/img/login-bg/pittsburgh.jpg') !important;
+    url('/assets/img/login-bg/pittsburgh.jpg') !important;
   background-size: cover, cover, cover, cover !important;
   background-position: center, center, center, center bottom !important;
   background-repeat: no-repeat !important;
