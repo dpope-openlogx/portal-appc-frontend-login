@@ -19,6 +19,11 @@ find src/components -name "component.html" -o -name "component.css" | while read
 done
 
 echo "🔧 Fixing CSS asset paths for production..."
+echo "Looking for CSS files in: dist/components/"
+ls -la dist/components/ 2>/dev/null || echo "No components directory found"
+find dist/components -name "component.css" -exec echo "Processing: {}" \;
 find dist/components -name "component.css" -exec sed -i '' "s|url('/assets/|url('../../assets/|g" {} \;
+echo "🔍 Verifying CSS path replacement..."
+find dist/components -name "component.css" -exec grep "url(" {} \;
 
 echo "✅ Login SPA build complete. Output: dist/"
