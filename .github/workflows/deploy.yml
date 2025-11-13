@@ -57,18 +57,18 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           # Create backup of current version if requested
-          if [ "${{ github.event.inputs.create_backup }}" = "true" ] && [ -d "/Users/githubActions/spa/login" ]; then
-            BACKUP_NAME="login-spa.backup.$(date +%Y%m%d_%H%M%S)"
+          if [ "${{ github.event.inputs.create_backup }}" = "true" ] && [ -d "/Users/githubActions/appc/portal" ]; then
+            BACKUP_NAME="portal.backup.$(date +%Y%m%d_%H%M%S)"
             echo "Creating backup: $BACKUP_NAME"
-            mv /Users/githubActions/spa/login /Users/githubActions/spa/$BACKUP_NAME
+            mv /Users/githubActions/appc/portal /Users/githubActions/appc/$BACKUP_NAME
 
             # Keep only last 5 backups
-            cd /Users/githubActions/spa
-            ls -1t login-spa.backup.* 2>/dev/null | tail -n +6 | xargs rm -rf 2>/dev/null || true
+            cd /Users/githubActions/appc
+            ls -1t portal.backup.* 2>/dev/null | tail -n +6 | xargs rm -rf 2>/dev/null || true
           fi
 
           # Create application directory
-          mkdir -p /Users/githubActions/spa/login
+          mkdir -p /Users/githubActions/appc/portal
 
     - name: Copy deployment package
       uses: appleboy/scp-action@v0.1.7
@@ -86,8 +86,8 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          # Extract application to login directory
-          cd /Users/githubActions/spa/login
+          # Extract application to portal directory
+          cd /Users/githubActions/appc/portal
           tar -xzf /tmp/login-spa.tar.gz
 
           # Copy files to nginx document root (/)

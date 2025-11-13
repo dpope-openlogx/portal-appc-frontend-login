@@ -20,27 +20,27 @@ jobs:
         username: ${{ secrets.SERVER_USER }}
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
-          cd /Users/githubActions/spa
+          cd /Users/githubActions/appc
 
           # Check if backup exists
           if [ ! -d "${{ github.event.inputs.backup_name }}" ]; then
             echo "Error: Backup '${{ github.event.inputs.backup_name }}' not found"
             echo "Available backups:"
-            ls -la | grep login-spa.backup
+            ls -la | grep portal.backup
             exit 1
           fi
 
           # Create backup of current broken version
-          if [ -d "login" ]; then
-            mv login login.broken.$(date +%Y%m%d_%H%M%S)
+          if [ -d "portal" ]; then
+            mv portal portal.broken.$(date +%Y%m%d_%H%M%S)
           fi
 
           # Restore the backup
           echo "Restoring backup: ${{ github.event.inputs.backup_name }}"
-          mv "${{ github.event.inputs.backup_name }}" login
+          mv "${{ github.event.inputs.backup_name }}" portal
 
           # Copy restored files to nginx document root
-          sudo cp -r login/* /var/www/oils.exchange/
+          sudo cp -r portal/* /var/www/oils.exchange/
 
           echo "Rollback completed successfully!"
 
@@ -58,5 +58,5 @@ jobs:
         key: ${{ secrets.SERVER_SSH_KEY }}
         script: |
           echo "Current backups available:"
-          cd /Users/githubActions/spa
-          ls -la | grep -E "(login-spa\\.backup|login\\.broken)" | awk '{print $9, $6, $7, $8}'
+          cd /Users/githubActions/appc
+          ls -la | grep -E "(portal\\.backup|portal\\.broken)" | awk '{print $9, $6, $7, $8}'
