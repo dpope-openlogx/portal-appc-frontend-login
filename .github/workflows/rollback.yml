@@ -1,0 +1,62 @@
+name: Rollback Login SPA
+
+on:
+  workflow_dispatch:
+    inputs:
+      backup_name:
+        description: 'Backup to restore (e.g., login-spa.backup.20241113_143022)'
+        required: true
+        type: string
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Rollback to backup
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          cd /Users/githubActions/spa
+
+          # Check if backup exists
+          if [ ! -d "${{ github.event.inputs.backup_name }}" ]; then
+            echo "Error: Backup '${{ github.event.inputs.backup_name }}' not found"
+            echo "Available backups:"
+            ls -la | grep login-spa.backup
+            exit 1
+          fi
+
+          # Create backup of current broken version
+          if [ -d "login" ]; then
+            mv login login.broken.$(date +%Y%m%d_%H%M%S)
+          fi
+
+          # Restore the backup
+          echo "Restoring backup: ${{ github.event.inputs.backup_name }}"
+          mv "${{ github.event.inputs.backup_name }}" login
+
+          # Copy restored files to nginx document root
+          sudo cp -r login/* /var/www/oils.exchange/
+
+          echo "Rollback completed successfully!"
+
+    - name: Health Check
+      run: |
+        sleep 5
+        curl -f https://oils.exchange/ || exit 1
+      continue-on-error: true
+
+    - name: List available backups
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          echo "Current backups available:"
+          cd /Users/githubActions/spa
+          ls -la | grep -E "(login-spa\\.backup|login\\.broken)" | awk '{print $9, $6, $7, $8}'

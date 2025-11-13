@@ -1,0 +1,103 @@
+name: Deploy Login SPA
+
+on:
+  workflow_dispatch: # Manual trigger only
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+      ref:
+        description: 'Git ref to deploy (branch, tag, or commit SHA)'
+        required: true
+        default: 'main'
+        type: string
+      create_backup:
+        description: 'Create backup before deployment'
+        required: false
+        default: true
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.inputs.ref }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Create deployment package
+      run: |
+        mkdir -p deploy
+        cp -r dist/* deploy/
+        tar -czf login-spa.tar.gz -C deploy .
+
+    - name: Deploy to server
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          # Create backup of current version if requested
+          if [ "${{ github.event.inputs.create_backup }}" = "true" ] && [ -d "/Users/githubActions/spa/login" ]; then
+            BACKUP_NAME="login-spa.backup.$(date +%Y%m%d_%H%M%S)"
+            echo "Creating backup: $BACKUP_NAME"
+            mv /Users/githubActions/spa/login /Users/githubActions/spa/$BACKUP_NAME
+
+            # Keep only last 5 backups
+            cd /Users/githubActions/spa
+            ls -1t login-spa.backup.* 2>/dev/null | tail -n +6 | xargs rm -rf 2>/dev/null || true
+          fi
+
+          # Create application directory
+          mkdir -p /Users/githubActions/spa/login
+
+    - name: Copy deployment package
+      uses: appleboy/scp-action@v0.1.7
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        source: "login-spa.tar.gz"
+        target: "/tmp/"
+
+    - name: Extract and setup application
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.SERVER_SSH_KEY }}
+        script: |
+          # Extract application to login directory
+          cd /Users/githubActions/spa/login
+          tar -xzf /tmp/login-spa.tar.gz
+
+          # Copy files to nginx document root (/)
+          sudo cp -r * /var/www/oils.exchange/
+
+          # Health check
+          sleep 5
+          curl -f https://oils.exchange/ || exit 1
+
+          # Cleanup
+          rm /tmp/login-spa.tar.gz
+
+          echo "Login SPA deployment completed successfully!"
