@@ -71,7 +71,7 @@ export async function initializeLayout(): Promise<void> {
   const hash = window.location.hash || '#/';
   const path = hash.replace(/^#/, '');
 
-  const response = await fetch('/routes.json');
+  const response = await fetch(`${import.meta.env.BASE_URL}routes.json`);
   const routes: Record<string, RouteEntry> = await response.json();
   const route = routes[path] || routes['/'];
 
