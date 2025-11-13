@@ -141,6 +141,7 @@ export default defineConfig(({ mode }) => {
   return (mode !== 'development') ?
   {
     root: '.',
+    base: '/appc/',
     publicDir: 'public',
     plugins: [
       middlewarePlugin(env),
