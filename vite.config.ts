@@ -27,7 +27,7 @@ const middlewarePlugin = (env: Record<string, string>) => ({
         const apiPath = req.url?.replace('/api', '') || '/';
 
         // Get proxy target from env, default to AWS
-        const proxyTarget = env.VITE_API_PROXY_TARGET || 'https://dev.portal.appc.api.openlogx.com';
+        const proxyTarget = env.VITE_API_PROXY_TARGET || 'https://oils.exchange';
         const targetUrl = new URL(proxyTarget);
 
         // Derive origin by removing 'api.' from hostname (e.g., dev.portal.neutranarc.api.openlogx.com -> dev.portal.neutranarc.openlogx.com)
@@ -46,10 +46,6 @@ const middlewarePlugin = (env: Record<string, string>) => ({
               ...cleanHeaders,
               'host': targetUrl.host,
               'origin': `${targetUrl.protocol}//${originHost}`,
-              // AWS API Gateway context headers for local backend testing
-              'AWS_ACCOUNT_ID': env.VITE_AWS_ACCOUNT_ID || 'undefined',
-              'AWS_REGION': env.VITE_AWS_REGION || 'undefined',
-              'AWS_PARTITION': env.VITE_AWS_PARTITION || 'undefined'
             },
             rejectUnauthorized: false
           },
