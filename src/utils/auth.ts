@@ -41,8 +41,18 @@ export async function signInUser(email: string, password: string): Promise<{
 }> {
   await configureAuth();
 
+  let result;
   try {
-    const result = await signIn({ username: email, password });
+    result = await signIn({ username: email, password });
+  } catch (error: any) {
+    if (error.message && error.message.includes('There is already a signed in user')) {
+      console.log('[signInUser] User already signed in, attempting sign out and retry...');
+      await signOut();
+      result = await signIn({ username: email, password });
+    } else {
+      throw error;
+    }
+  }
 
   if (!result.isSignedIn && result.nextStep.signInStep === "CONTINUE_SIGN_IN_WITH_TOTP_SETUP") {
     return {
@@ -113,31 +123,6 @@ export async function signInUser(email: string, password: string): Promise<{
   }
 
   return { status: 'Success'};
-
-  } catch (error: any) {
-    console.error('[signInUser] Error:', error);
-
-    // Handle the specific case where user is already signed in
-    if (error.message && error.message.includes('already a signed in user')) {
-      console.log('[signInUser] User already signed in, signing out first and retrying...');
-      try {
-        await signOut();
-        // Retry the sign in after signing out
-        const retryResult = await signIn({ username: email, password });
-        // Process the retry result with the same logic as above
-        // For now, just return MFASetup to trigger the setup flow
-        return {
-          status: 'MFASetup',
-          mfaSetupUrl: '' // Empty URL signals we should go to post-password-change
-        };
-      } catch (retryError) {
-        console.error('[signInUser] Retry failed:', retryError);
-        return { status: 'Failed', error: 'Sign in failed after retry' };
-      }
-    }
-
-    return { status: 'Failed', error: error.message || 'Sign in failed' };
-  }
 }
 
 export async function updatePassword(email: string, newPassword: string, tempPassword: string) {
