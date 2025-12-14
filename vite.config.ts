@@ -101,7 +101,7 @@ const middlewarePlugin = (env: Record<string, string>) => ({
       if (isMainAppRequest) {
         const proxyReq = https.request(
           {
-            hostname: 'local.openlogx.com',
+            hostname: 'local.oils.exchange',
             port: 5161,
             path: req.url,
             method: req.method,
@@ -190,7 +190,7 @@ export default defineConfig(({ mode }) => {
       }
     },
     server: {
-      host: 'local.openlogx.com',
+      host: 'local.oils.exchange',
       port: 5160,
       open: false,
       http2: false,
