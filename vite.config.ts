@@ -1,8 +1,18 @@
 import { defineConfig, ViteDevServer, loadEnv } from 'vite';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import { execSync } from 'child_process';
 import https from 'https';
 import fs from 'fs';
 import path from 'path';
+
+// Returns the current git commit short SHA for cache-busting. Changes automatically with each new commit.
+function getBuildHash(): string {
+  try {
+    return execSync('git rev-parse --short HEAD').toString().trim();
+  } catch {
+    return Date.now().toString(36);
+  }
+}
 
 const middlewarePlugin = (env: Record<string, string>) => ({
   name: 'login-middleware',
@@ -161,7 +171,8 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      'import.meta.env.DEV': mode === 'development'
+      'import.meta.env.DEV': mode === 'development',
+      '__BUILD_HASH__': JSON.stringify(getBuildHash())
     }
   }
   :
@@ -200,7 +211,8 @@ export default defineConfig(({ mode }) => {
       }
     },
     define: {
-      'import.meta.env.DEV': mode === 'development'
+      'import.meta.env.DEV': mode === 'development',
+      '__BUILD_HASH__': JSON.stringify(getBuildHash())
     }
   };
 });

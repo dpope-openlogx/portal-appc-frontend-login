@@ -1,1 +1,1 @@
-export const ASSET_VERSION = 'v1.0.0'; // Update this when you want to force reload of JS/CSS assets
+export const ASSET_VERSION: string = __BUILD_HASH__;

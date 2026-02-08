@@ -4,6 +4,7 @@ import { RouteMap } from './types/routes';
 import { initializeLayout, updateChildView } from './components/main-viewport/component';
 import Auth from './utils/auth';
 import { getAuthEndpoint } from './utils/config';
+import { ASSET_VERSION } from './utils/version';
 import { listWebAuthnCredentials, fetchMFAPreference } from 'aws-amplify/auth';
 
 // Vite import map for components
@@ -188,7 +189,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   Auth.checkForSessionExpiry();
 
   // Load route config and start routing
-  const routeData = await fetch(`${import.meta.env.BASE_URL}routes.json`).then(r => r.json());
+  const routeData = await fetch(`${import.meta.env.BASE_URL}routes.json?v=${ASSET_VERSION}`).then(r => r.json());
   window.routes = routeData;
   
   // Bootstrap the app

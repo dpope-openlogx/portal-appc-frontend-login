@@ -3,6 +3,7 @@ import { reinitializeTemplate } from '../../utils/template';
 import type { RouteEntry } from '../../types/routes';
 import type { ComponentModule } from '../../types/component-module';
 import { registerLayoutCleanup, cleanupCurrentComponent } from '../../app';
+import { ASSET_VERSION } from '../../utils/version';
 
 let currentComponent: string | null = null;
 const componentName = 'main-viewport';
@@ -71,7 +72,7 @@ export async function initializeLayout(): Promise<void> {
   const hash = window.location.hash || '#/';
   const path = hash.replace(/^#/, '');
 
-  const response = await fetch(`${import.meta.env.BASE_URL}routes.json`);
+  const response = await fetch(`${import.meta.env.BASE_URL}routes.json?v=${ASSET_VERSION}`);
   const routes: Record<string, RouteEntry> = await response.json();
   const route = routes[path] || routes['/'];
 

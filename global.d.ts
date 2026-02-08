@@ -4,6 +4,8 @@
 export {};
 
 declare global {
+  const __BUILD_HASH__: string;
+
   interface Window {
     jQuery: any;
     $: any;

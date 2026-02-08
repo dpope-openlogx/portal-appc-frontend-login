@@ -1,4 +1,5 @@
 import { notify } from './notify';
+import { ASSET_VERSION } from './version';
 
 export interface IConfig {
   cognito_userPoolId: string;
@@ -97,7 +98,7 @@ export async function getConfig(): Promise<IConfig> {
     // will typically result in non-200 status codes, and response.ok will correctly be false.
     // However, in Vite's dev server, it may return 200 OK even if the file doesn't exist,
     // often serving an HTML fallback. So we must also manually parse the text to detect invalid JSON.
-    const response = await fetch(`${import.meta.env.BASE_URL}config.json`);
+    const response = await fetch(`${import.meta.env.BASE_URL}config.json?v=${ASSET_VERSION}`);
     if (!response.ok) {
       throw new Error(`Failed to load config.json: ${response.status}`);
     }
