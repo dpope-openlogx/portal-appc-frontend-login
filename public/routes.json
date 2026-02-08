@@ -52,5 +52,11 @@
     "child": {
       "component": "forgot-password"
     }
+  },
+  "/register": {
+    "component": "main-viewport",
+    "child": {
+      "component": "register"
+    }
   }
 }

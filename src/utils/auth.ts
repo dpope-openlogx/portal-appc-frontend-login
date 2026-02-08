@@ -3,7 +3,7 @@ import { signIn, confirmSignIn, confirmResetPassword, fetchAuthSession, resetPas
 import { getConfig } from './config';
 
 export const PUBLIC_ROUTES = ['/', '/login', '/login/admin', '/forgot-password', '/mfa', '/reset-password'
-  ,  '/mfa-setup', '/reset-password-confirm','/update-password', '/post-password-change'] as string[];
+  ,  '/mfa-setup', '/reset-password-confirm','/update-password', '/post-password-change', '/register'] as string[];
 
 let isConfigured = false;
 
