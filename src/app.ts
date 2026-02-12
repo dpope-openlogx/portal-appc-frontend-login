@@ -145,8 +145,37 @@ async function loadGlobalAssets(): Promise<void> {
 // Initialize styles/scripts and load routes on page load
 window.addEventListener('DOMContentLoaded', async () => {
 
-  // Auto-redirect if session is already valid
-  const alreadyLoggedIn = await Auth.checkSession();
+  // If CloudFront served this login page at /secure/ (custom error response for
+  // unauthenticated requests), redirect to root so the URL is correct.
+  // Use replace() so the user doesn't hit back and land at /secure/ again.
+  if (window.location.pathname.startsWith('/secure')) {
+    window.location.replace('/' + (window.location.search || '?reason=session_expired'));
+    return;
+  }
+
+  // If the portal just rejected this session, don't auto-redirect back —
+  // force a fresh login. Check both query param and sessionStorage flag
+  // (sessionStorage flag is more reliable since query param can get stripped)
+  const urlParams = new URLSearchParams(window.location.search);
+  const wasSessionExpired = urlParams.get('reason') === 'session_expired'
+    || sessionStorage.getItem('session_rejected') !== null;
+
+  if (wasSessionExpired) {
+    // Clear the flag so future direct visits to / can auto-redirect
+    sessionStorage.removeItem('session_rejected');
+    // Sign out from Cognito to clear Amplify's cached tokens
+    // (portal's signOut may not have completed before redirect)
+    try {
+      await Auth.configureAuth();
+      const { signOut } = await import('aws-amplify/auth');
+      await signOut();
+    } catch (e) {
+      // Ignore — we just want to clear local state
+    }
+  }
+
+  // Auto-redirect if session is already valid (but not if portal just kicked us here)
+  const alreadyLoggedIn = !wasSessionExpired && await Auth.checkSession();
   if (alreadyLoggedIn) {
     console.log('[Login SPA] Session already valid, checking MFA setup...');
 
