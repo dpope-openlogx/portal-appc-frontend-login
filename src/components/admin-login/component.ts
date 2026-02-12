@@ -463,28 +463,21 @@ function setJWTCookie(jwt: string): void {
       return;
     }
 
-    const isProduction = window.location.protocol === 'https:';
     const cookieOptions = [
       `token=${jwt}`,
       'path=/',
       `expires=${expiryDate.toUTCString()}`,
-      'samesite=lax'
+      'samesite=none',
+      'secure'
     ];
 
-    if (isProduction) {
-      cookieOptions.push('secure');
-    }
-
-    const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN;
-    if (cookieDomain) {
-      cookieOptions.push(`domain=${cookieDomain}`);
-    }
+    cookieOptions.push('domain=.oils.exchange');
 
     document.cookie = cookieOptions.join('; ');
   } catch (error) {
     console.error('Failed to parse JWT for cookie expiry:', error);
     const fallbackExpiry = new Date();
     fallbackExpiry.setHours(fallbackExpiry.getHours() + 1);
-    document.cookie = `token=${jwt}; path=/; expires=${fallbackExpiry.toUTCString()}; samesite=strict`;
+    document.cookie = `token=${jwt}; path=/; expires=${fallbackExpiry.toUTCString()}; samesite=none; secure; domain=.oils.exchange`;
   }
 }

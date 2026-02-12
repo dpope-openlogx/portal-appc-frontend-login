@@ -445,24 +445,15 @@ function setJWTCookie(jwt: string): void {
       return;
     }
 
-    // Set secure flag only in production (https)
-    const isProduction = window.location.protocol === 'https:';
     const cookieOptions = [
       `token=${jwt}`,
       'path=/',
       `expires=${expiryDate.toUTCString()}`,
-      'samesite=lax'
+      'samesite=none',
+      'secure'
     ];
 
-    if (isProduction) {
-      cookieOptions.push('secure');
-    }
-
-    // Add domain if specified in environment
-    const cookieDomain = import.meta.env.VITE_COOKIE_DOMAIN;
-    if (cookieDomain) {
-      cookieOptions.push(`domain=${cookieDomain}`);
-    }
+    cookieOptions.push('domain=.oils.exchange');
 
     document.cookie = cookieOptions.join('; ');
   } catch (error) {
@@ -470,7 +461,7 @@ function setJWTCookie(jwt: string): void {
     // Fallback to 1 hour if we can't parse the JWT
     const fallbackExpiry = new Date();
     fallbackExpiry.setHours(fallbackExpiry.getHours() + 1);
-    document.cookie = `token=${jwt}; path=/; expires=${fallbackExpiry.toUTCString()}; samesite=strict`;
+    document.cookie = `token=${jwt}; path=/; expires=${fallbackExpiry.toUTCString()}; samesite=none; secure; domain=.oils.exchange`;
   }
 }
 
