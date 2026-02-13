@@ -1,6 +1,6 @@
 import { Amplify } from 'aws-amplify';
 import { signIn, confirmSignIn, confirmResetPassword, fetchAuthSession, resetPassword, listWebAuthnCredentials, signOut, setUpTOTP, verifyTOTPSetup, updateMFAPreference, associateWebAuthnCredential, fetchMFAPreference } from 'aws-amplify/auth';
-import { getConfig } from './config';
+import { getConfig, getApiBaseUrl } from './config';
 
 export const PUBLIC_ROUTES = ['/', '/login', '/login/admin', '/forgot-password', '/mfa', '/reset-password'
   ,  '/mfa-setup', '/reset-password-confirm','/update-password', '/post-password-change', '/register'] as string[];
@@ -95,8 +95,58 @@ export async function signInUser(email: string, password: string): Promise<{
       console.log('[signInUser] MFA preference:', mfaPreference);
       console.log('[signInUser] Has MFA:', hasMFA, 'Has Passkeys:', hasPasskeys);
 
-      // If user has neither MFA nor passkeys, they need to set one up
+      // If user has neither MFA nor passkeys, check if they've chosen password-only
       if (!hasMFA && !hasPasskeys) {
+        // Get the user's authMethod from the database to see if they chose password-only
+        try {
+          const authSession = await fetchAuthSession();
+          const accessToken = authSession.tokens?.accessToken?.toString();
+
+          if (accessToken) {
+            // Store tokens early so they're available for post-password-change flow
+            sessionStorage.setItem('accessToken', accessToken);
+            setJWTCookie(accessToken);
+            const idToken = authSession.tokens?.idToken?.toString();
+            if (idToken) {
+              sessionStorage.setItem('idToken', idToken);
+            }
+
+            // Decode token to get cognitoId
+            const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            const cognitoId = payload.sub || payload['cognito:username'];
+
+            if (cognitoId) {
+              // Fetch user from API to check authMethod
+              const apiBaseUrl = getApiBaseUrl();
+
+              const response = await fetch(`${apiBaseUrl}get-user-by-cognito-id/${cognitoId}`, {
+                method: 'GET',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${accessToken}`
+                }
+              });
+
+              if (!response.ok) {
+                console.warn('[signInUser] API returned', response.status, 'checking authMethod — skipping');
+                return { status: 'Success' };
+              }
+
+              const userData = await response.json();
+              console.log('[signInUser] User authMethod:', userData.authMethod);
+
+              // If user has explicitly chosen password-only, allow sign-in
+              if (userData.authMethod === 'password-only') {
+                console.log('[signInUser] User has password-only auth method, allowing sign-in');
+                return { status: 'Success' };
+              }
+            }
+          }
+        } catch (apiError) {
+          console.warn('[signInUser] Failed to check user authMethod — skipping:', apiError);
+          return { status: 'Success' };
+        }
+
         console.warn('[signInUser] User has no second factor configured');
         return {
           status: 'MFASetup',
