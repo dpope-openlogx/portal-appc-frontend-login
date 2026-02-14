@@ -128,8 +128,9 @@ export async function signInUser(email: string, password: string): Promise<{
               });
 
               if (!response.ok) {
-                console.warn('[signInUser] API returned', response.status, 'checking authMethod — skipping');
-                return { status: 'Success' };
+                console.warn('[signInUser] API returned', response.status, 'checking authMethod');
+                try { await signOut(); } catch (_) { /* ignore */ }
+                return { status: 'Failed', error: 'Sign-in is temporarily unavailable due to a system issue. Please try again later.' };
               }
 
               const userData = await response.json();
@@ -143,8 +144,9 @@ export async function signInUser(email: string, password: string): Promise<{
             }
           }
         } catch (apiError) {
-          console.warn('[signInUser] Failed to check user authMethod — skipping:', apiError);
-          return { status: 'Success' };
+          console.warn('[signInUser] Failed to check user authMethod:', apiError);
+          try { await signOut(); } catch (_) { /* ignore */ }
+          return { status: 'Failed', error: 'Sign-in is temporarily unavailable due to a system issue. Please try again later.' };
         }
 
         console.warn('[signInUser] User has no second factor configured');
