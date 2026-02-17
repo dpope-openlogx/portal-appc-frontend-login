@@ -375,6 +375,28 @@ export async function verifyMFACode(site: string, code: string): Promise<{ statu
 export async function checkSession(): Promise<boolean> {
   try {
     await configureAuth();
+
+    // Check if session should be expired due to inactivity (survives tab close)
+    // The main app persists lastActivityTime and sessionTimeoutMs to localStorage.
+    // Without this check, Cognito's refresh token silently re-authenticates.
+    const storedLastActivity = localStorage.getItem('lastActivityTime');
+    const storedTimeoutMs = localStorage.getItem('sessionTimeoutMs');
+    if (storedLastActivity) {
+      const lastActive = parseInt(storedLastActivity, 10);
+      const maxInactivityMs = storedTimeoutMs ? parseInt(storedTimeoutMs, 10) : 60 * 60 * 1000;
+
+      if (Date.now() - lastActive > maxInactivityMs) {
+        console.log('[checkSession] Inactivity timeout exceeded — signing out');
+        try {
+          await signOut();
+        } catch (e) { /* ignore signOut errors */ }
+        sessionStorage.removeItem('accessToken');
+        sessionStorage.removeItem('idToken');
+        localStorage.removeItem('lastActivityTime');
+        return false;
+      }
+    }
+
     const session = await fetchAuthSession();
     const accessToken = session.tokens?.accessToken?.toString();
     const idToken = session.tokens?.idToken?.toString();
@@ -382,10 +404,10 @@ export async function checkSession(): Promise<boolean> {
     if (accessToken && idToken) {
       sessionStorage.setItem('accessToken', accessToken);
       sessionStorage.setItem('idToken', idToken);
-      
+
       // Set JWT cookie if we have a valid session
       setJWTCookie(accessToken);
-      
+
       return true;
     }
 
