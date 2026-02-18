@@ -80,7 +80,6 @@ export async function initializeLayout(): Promise<void> {
     await updateChildView(route.child);
   }
 
-  requestAnimationFrame(setupSessionInvalidHandler);
 }
 
 export async function updateChildView(childRoute: RouteEntry['child'] | undefined): Promise<void> {
@@ -150,18 +149,3 @@ export async function updateChildView(childRoute: RouteEntry['child'] | undefine
 
   reinitializeTemplate();
 }
-
-// Session invalid modal handler
-function setupSessionInvalidHandler() {
-  // Handler is now managed in auth.ts showSessionExpiredModal function
-  // to avoid duplicate event listeners and unwanted reloads
-  return;
-}
-
-// Listen for session:invalid custom event and show the modal
-window.addEventListener('session:invalid', () => {
-  const modal = document.getElementById('modal-session');
-  if (modal) {
-    (window as any).jQuery(modal).modal('show');
-  }
-});
