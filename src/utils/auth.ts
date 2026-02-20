@@ -503,6 +503,94 @@ export function getAccessToken(): string | null {
   return sessionStorage.getItem('accessToken');
 }
 
+// Helper function to get Cognito ID from access token
+export function getCognitoIdFromToken(): string | null {
+  const token = getAccessToken();
+  if (!token) return null;
+
+  try {
+    const payload = token.split('.')[1];
+    const decoded = JSON.parse(atob(payload));
+    return decoded.sub || decoded['cognito:username'] || null;
+  } catch (err) {
+    console.error('[auth] Failed to decode token:', err);
+    return null;
+  }
+}
+
+// Helper function to get user by Cognito ID
+export async function getUserByCognitoId(cognitoId: string): Promise<any> {
+  const apiBaseUrl = getApiBaseUrl();
+  const token = getAccessToken();
+
+  const response = await fetch(`${apiBaseUrl}get-user-by-cognito-id/${cognitoId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch user: ${response.status}`);
+  }
+
+  return response.json();
+}
+
+// Helper function to update user's auth method
+export async function updateUserAuthMethod(
+  authMethod: 'mfa' | 'passkey' | 'password-only',
+  acknowledgment?: boolean
+): Promise<void> {
+  const cognitoId = getCognitoIdFromToken();
+  if (!cognitoId) {
+    throw new Error('No cognitoId available');
+  }
+
+  console.log('[updateUserAuthMethod] Updating authMethod to:', authMethod);
+
+  const userData = await getUserByCognitoId(cognitoId);
+  console.log('[updateUserAuthMethod] Current userData authMethod:', userData.authMethod);
+
+  // Remove passwordOnlyAcknowledgment from existing metadata (will re-add if needed)
+  const { passwordOnlyAcknowledgment, ...restMetadata } = userData.metadata || {};
+
+  const updatedUser = {
+    ...userData,
+    authMethod,
+    metadata: {
+      ...restMetadata,
+      ...(acknowledgment && authMethod === 'password-only' ? {
+        passwordOnlyAcknowledgment: {
+          version: '1.0',
+          timestamp: new Date().toISOString()
+        }
+      } : {})
+    }
+  };
+
+  const apiBaseUrl = getApiBaseUrl();
+  const token = getAccessToken();
+
+  const response = await fetch(`${apiBaseUrl}set-user`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(updatedUser)
+  });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    console.error('[updateUserAuthMethod] FAILED:', response.status, body);
+    throw new Error(`Failed to update user: ${response.status} ${body}`);
+  }
+
+  console.log('[updateUserAuthMethod] SUCCESS - authMethod saved');
+}
+
 function setJWTCookie(jwt: string): void {
   if (!jwt) return;
 

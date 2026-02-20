@@ -1,5 +1,5 @@
 import { loadStylesheetOnce } from '../../utils/loaders';
-import { setupMFA, registerPasskey } from '../../utils/auth';
+import { setupMFA, registerPasskey, updateUserAuthMethod } from '../../utils/auth';
 import { notify } from '../../utils/notify';
 import { getEmail, clearEmail } from '../../utils/state';
 import { getAuthEndpoint } from '../../utils/config';
@@ -28,12 +28,23 @@ export async function init(): Promise<void> {
   // Get DOM elements
   const authChoiceSection = document.querySelector('.auth-choice-section') as HTMLElement;
   const passkeySetupSection = document.getElementById('passkey-setup-section') as HTMLElement;
+  const passwordOnlyOption = document.getElementById('password-only-option') as HTMLElement;
+  const passwordOnlyConfirmSection = document.getElementById('password-only-confirm-section') as HTMLElement;
   const setupMfaBtn = document.getElementById('setup-mfa-btn') as HTMLButtonElement;
   const setupPasskeyBtn = document.getElementById('setup-passkey-btn') as HTMLButtonElement;
+  const passwordOnlyBtn = document.getElementById('password-only-btn') as HTMLButtonElement;
+  const confirmPasswordOnlyBtn = document.getElementById('confirm-password-only-btn') as HTMLButtonElement;
+  const backFromPasswordOnlyBtn = document.getElementById('back-from-password-only-btn') as HTMLButtonElement;
   const createPasskeyBtn = document.getElementById('create-passkey-btn') as HTMLButtonElement;
   const backToChoiceBtn = document.getElementById('back-to-choice-btn') as HTMLButtonElement;
   const errorMessage = document.getElementById('error-message') as HTMLElement;
   const successMessage = document.getElementById('success-message') as HTMLElement;
+
+  // Show password-only option if env variable allows it
+  if (import.meta.env.VITE_ALLOW_PASSWORD_ONLY === 'true' && passwordOnlyOption) {
+    passwordOnlyOption.classList.remove('d-none');
+    console.log(`[${componentName}] Password-only option enabled via VITE_ALLOW_PASSWORD_ONLY`);
+  }
 
   // Helper functions
   function showError(message: string): void {
@@ -64,11 +75,20 @@ export async function init(): Promise<void> {
   function showPasskeySetup(): void {
     authChoiceSection?.classList.add('d-none');
     passkeySetupSection?.classList.remove('d-none');
+    passwordOnlyConfirmSection?.classList.add('d-none');
+    hideMessages();
+  }
+
+  function showPasswordOnlyConfirm(): void {
+    authChoiceSection?.classList.add('d-none');
+    passkeySetupSection?.classList.add('d-none');
+    passwordOnlyConfirmSection?.classList.remove('d-none');
     hideMessages();
   }
 
   function showAuthChoice(): void {
     passkeySetupSection?.classList.add('d-none');
+    passwordOnlyConfirmSection?.classList.add('d-none');
     authChoiceSection?.classList.remove('d-none');
     hideMessages();
   }
@@ -153,7 +173,11 @@ export async function init(): Promise<void> {
         const result = await registerPasskey();
 
         if (result.status === 'Success') {
-          showSuccess('Passkey created successfully! Redirecting...');
+          // Update user's authMethod to passkey
+          await updateUserAuthMethod('passkey');
+          console.log(`[${componentName}] User authMethod updated to passkey`);
+
+          notify('success', 'Passkey created successfully! Redirecting...', 'Account Setup');
 
           // Clear email from state since auth is complete
           clearEmail();
@@ -193,7 +217,7 @@ export async function init(): Promise<void> {
         }
 
         const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
-        showError(message);
+        notify('error', message, 'Account Setup');
       }
     };
 
@@ -219,6 +243,91 @@ export async function init(): Promise<void> {
       element: backToChoiceBtn,
       event: 'click',
       listener: backClickHandler
+    });
+  }
+
+  // Password Only Button Handler
+  if (passwordOnlyBtn) {
+    const passwordOnlyClickHandler = (e: Event) => {
+      e.preventDefault();
+      showPasswordOnlyConfirm();
+    };
+
+    passwordOnlyBtn.addEventListener('click', passwordOnlyClickHandler);
+    trackedHandlers.push({
+      name: 'password-only-click',
+      element: passwordOnlyBtn,
+      event: 'click',
+      listener: passwordOnlyClickHandler
+    });
+  }
+
+  // Confirm Password Only Button Handler
+  if (confirmPasswordOnlyBtn) {
+    const btnText = confirmPasswordOnlyBtn.querySelector('.confirm-btn-text') as HTMLElement;
+    const btnSpinner = confirmPasswordOnlyBtn.querySelector('.confirm-btn-spinner') as HTMLElement;
+
+    const confirmPasswordOnlyHandler = async (e: Event) => {
+      e.preventDefault();
+      hideMessages();
+
+      try {
+        // Show loading state
+        confirmPasswordOnlyBtn.disabled = true;
+        btnText?.classList.add('d-none');
+        btnSpinner?.classList.remove('d-none');
+
+        console.log(`[${componentName}] Processing password-only choice...`);
+
+        // Update authMethod to password-only
+        await updateUserAuthMethod('password-only', true);
+        console.log(`[${componentName}] User authMethod updated to password-only`);
+
+        notify('success', 'Account setup complete! Redirecting...', 'Account Setup');
+
+        // Clear email from state since auth is complete
+        clearEmail();
+
+        // Wait a moment to show success message, then redirect
+        setTimeout(() => {
+          window.location.href = getAuthEndpoint();
+        }, 1500);
+
+      } catch (error) {
+        console.error(`[${componentName}] Password-only confirmation error:`, error);
+
+        // Restore button state
+        confirmPasswordOnlyBtn.disabled = false;
+        btnText?.classList.remove('d-none');
+        btnSpinner?.classList.add('d-none');
+
+        const message = error instanceof Error ? error.message : 'An unexpected error occurred.';
+        notify('error', message, 'Account Setup');
+      }
+    };
+
+    confirmPasswordOnlyBtn.addEventListener('click', confirmPasswordOnlyHandler);
+    trackedHandlers.push({
+      name: 'confirm-password-only-click',
+      element: confirmPasswordOnlyBtn,
+      event: 'click',
+      listener: confirmPasswordOnlyHandler
+    });
+  }
+
+  // Back from Password Only Button Handler
+  if (backFromPasswordOnlyBtn) {
+    const backFromPasswordOnlyHandler = (e: Event) => {
+      e.preventDefault();
+      showAuthChoice();
+    };
+
+    backFromPasswordOnlyBtn.addEventListener('click', backFromPasswordOnlyHandler);
+    trackedHandlers.push({
+      name: 'back-from-password-only-click',
+      element: backFromPasswordOnlyBtn,
+      event: 'click',
+      listener: backFromPasswordOnlyHandler
     });
   }
 }

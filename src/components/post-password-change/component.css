@@ -31,6 +31,12 @@
   position: relative;
   transition: all 0.3s ease;
   padding: 16px;
+  display: flex !important;
+  align-items: center !important;
+}
+
+.auth-option button > div {
+  width: 100%;
 }
 
 .auth-option button:hover {
@@ -38,22 +44,33 @@
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-.auth-option button:hover .fa-mobile,
-.auth-option button:hover .fa-fingerprint {
-  color: #ffffff !important;
+.auth-option button .fa-mobile,
+.auth-option button .fa-fingerprint,
+.auth-option button .fa-key {
+  color: #0c265f;
+  transition: color 0.3s ease;
 }
 
-.auth-option button .fa-mobile,
-.auth-option button .fa-fingerprint {
-  color: #0c265f;
+.auth-option button:hover .fa-mobile,
+.auth-option button:hover .fa-fingerprint,
+.auth-option button:hover .fa-key,
+.auth-option button:hover .fa-chevron-right,
+.auth-option button:hover .text-gray-500 {
+  color: #ffffff !important;
 }
 
 .auth-option button .fa-chevron-right {
   font-size: 14px;
+  transition: color 0.3s ease;
 }
 
 /* Passkey setup section */
 #passkey-setup-section {
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* Password only confirm section */
+#password-only-confirm-section {
   animation: fadeIn 0.3s ease-in;
 }
 
@@ -85,12 +102,19 @@
   transform: none;
 }
 
-#back-to-choice-btn {
+#confirm-password-only-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+#back-to-choice-btn,
+#back-from-password-only-btn {
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-#back-to-choice-btn:hover {
+#back-to-choice-btn:hover,
+#back-from-password-only-btn:hover {
   color: #ffffff !important;
 }
 
